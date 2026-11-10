@@ -1,0 +1,57 @@
+6.12.0
+4
+35
+crw-rw-rw- 1 root root 10, 125 Nov  9 17:25 /dev/mychar
+crw-rw-rw- 1 root root 10, 124 Nov  9 17:25 /dev/sgpu
+sgpu                   65536  0
+mychar                 12288  0
+### mychar functional + stress
+stress: threads=4 seconds=60 ops=2044948 unexpected=0
+ALL TESTS PASSED: 142 checks, 0 failures
+exit=0
+### mychar repeat run
+ALL TESTS PASSED: 137 checks, 0 failures
+exit=0
+### mychar reload x5
+exit=0
+### sgpu reload with test commands
+exit=0
+### sgpu suite with test commands + stress
+status: reads=10313 context_cycles=4184
+stress: threads=4 seconds=60 jobs=89117 unexpected=0
+ALL TESTS PASSED: 285 checks, 0 failures
+exit=0
+### sgpu repeat run
+status: reads=9785 context_cycles=4500
+ALL TESTS PASSED: 284 checks, 0 failures
+exit=0
+### sgpu reload without test commands
+exit=0
+### sgpu suite without test commands
+status: reads=10316 context_cycles=4168
+ALL TESTS PASSED: 273 checks, 0 failures
+exit=0
+device: 0000:00:04.0
+### sgpu hot-unplug with open context
+terminate called after throwing an instance of 'std::__ios_failure'
+  what():  basic_filebuf::underflow error reading the file: Input/output error
+exit=255
+### sgpu rescan after unplug
+crw-rw-rw- 1 root root 10, 124 Nov  9 17:28 /dev/sgpu
+exit=0
+### sgpu suite after rescan
+status: reads=14448 context_cycles=5921
+ALL TESTS PASSED: 273 checks, 0 failures
+exit=0
+### sgpu unload
+exit=0
+### dmesg scan
+[  335.978462] WARNING: held lock freed!
+[  336.012468] BUG: KASAN: slab-use-after-free in __up_read+0x576/0x770
+ lock-classes:                         1238 [max: 8192]
+ dependency chains:                   11885 [max: 65536]
+ debug_locks:                             0
+4128
+dmesg_hits=2
+RESULT: FAIL
+log: $HOME/work/sgpu/logs/vmtest-20261110-012302.log

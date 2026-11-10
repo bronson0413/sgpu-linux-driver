@@ -1,0 +1,15 @@
+make[1]: Leaving directory '$HOME/work/sgpu/build-kcsan/sgpu'
+make[1]: Leaving directory '$HOME/work/sgpu/build-kcsan/mychar'
+stress: threads=4 seconds=120 ops=13188917 unexpected=0
+ALL TESTS PASSED: 142 checks, 0 failures
+mychar_exit=0
+status: reads=49029 context_cycles=20126
+stress: threads=4 seconds=120 jobs=569255 unexpected=0
+ALL TESTS PASSED: 292 checks, 0 failures
+sgpu_exit=0
+unplug: job_status=0 checks=5 failures=0
+unplug_exit=0
+kcsan_reports_total=5 racing_in_project_drivers=0
+    3  other   BUG: KCSAN: data-race in osq_unlock+0x9e/0x110
+    2  other   BUG: KCSAN: data-race in osq_lock / osq_unlock
+log: $HOME/work/sgpu/logs/kcsan-20261110-060758.log

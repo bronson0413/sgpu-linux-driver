@@ -1,0 +1,99 @@
+# syzkaller description of /dev/sgpu
+include <linux/fcntl.h>
+
+resource fd_sgpu[fd]
+resource sgpu_handle[int32]
+resource sgpu_va[int64]
+resource sgpu_fence[int64]
+
+openat$sgpu(fd const[AT_FDCWD], file ptr[in, string["/dev/sgpu"]], flags flags[open_flags], mode const[0]) fd_sgpu
+
+ioctl$SGPU_INFO(fd fd_sgpu, cmd const[SGPU_IOC_INFO], arg ptr[out, sgpu_info])
+ioctl$SGPU_BO_CREATE(fd fd_sgpu, cmd const[SGPU_IOC_BO_CREATE], arg ptr[inout, sgpu_bo_create])
+ioctl$SGPU_BO_DESTROY(fd fd_sgpu, cmd const[SGPU_IOC_BO_DESTROY], arg ptr[in, sgpu_bo_destroy])
+ioctl$SGPU_BO_WRITE(fd fd_sgpu, cmd const[SGPU_IOC_BO_WRITE], arg ptr[in, sgpu_bo_xfer])
+ioctl$SGPU_BO_READ(fd fd_sgpu, cmd const[SGPU_IOC_BO_READ], arg ptr[in, sgpu_bo_xfer])
+ioctl$SGPU_SUBMIT(fd fd_sgpu, cmd const[SGPU_IOC_SUBMIT], arg ptr[inout, sgpu_submit])
+ioctl$SGPU_WAIT(fd fd_sgpu, cmd const[SGPU_IOC_WAIT], arg ptr[inout, sgpu_wait])
+
+sgpu_info {
+	version		int32
+	num_contexts	int32
+	max_bo_size	int32
+	context_id	int32
+	banned		int32
+	resets		int32
+	test_ops	int32
+	pad		int32
+}
+
+sgpu_bo_create {
+	size	int64[1:0x100001]
+	gpu_va	sgpu_va	(out)
+	handle	sgpu_handle	(out)
+	pad	const[0, int32]
+}
+
+sgpu_bo_destroy {
+	handle	sgpu_handle
+	pad	const[0, int32]
+}
+
+sgpu_bo_xfer {
+	offset		int64[0:0x2000]
+	len		len[user_ptr, int64]
+	user_ptr	ptr64[inout, array[int8, 1:0x2000]]
+	handle		sgpu_handle
+	pad		const[0, int32]
+}
+
+sgpu_cmd_nop {
+	src	const[0, int64]
+	dst	const[0, int64]
+	opcode	const[SGPU_OP_NOP, int32]
+	len	const[0, int32]
+}
+
+sgpu_cmd_fill {
+	src	int64[0:255]
+	dst	sgpu_va
+	opcode	const[SGPU_OP_FILL, int32]
+	len	int32[1:0x2000]
+}
+
+sgpu_cmd_copy {
+	src	sgpu_va
+	dst	sgpu_va
+	opcode	const[SGPU_OP_COPY, int32]
+	len	int32[1:0x2000]
+}
+
+# Unconstrained fields keep the validator's rejection paths reachable.
+sgpu_cmd_raw {
+	src	int64
+	dst	int64
+	opcode	flags[sgpu_opcodes, int32]
+	len	int32
+}
+
+sgpu_cmd [
+	nop	sgpu_cmd_nop
+	fill	sgpu_cmd_fill
+	copy	sgpu_cmd_copy
+	raw	sgpu_cmd_raw
+]
+
+sgpu_opcodes = SGPU_OP_NOP, SGPU_OP_FILL, SGPU_OP_COPY, SGPU_OP_TEST_HANG, SGPU_OP_TEST_FAULT
+
+sgpu_submit {
+	cmds_ptr	ptr64[in, array[sgpu_cmd, 1:64]]
+	fence		sgpu_fence	(out)
+	count		len[cmds_ptr, int32]
+	pad		const[0, int32]
+}
+
+sgpu_wait {
+	fence		sgpu_fence
+	timeout_ms	int32[0:50]
+	status		int32	(out)
+}

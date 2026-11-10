@@ -1,0 +1,393 @@
+sgpu 0000:00:04.0: hang in context 2, resetting
+sgpu 0000:00:04.0: fault code 3 in context 2, resetting
+sgpu 0000:00:04.0: hang in context 2, resetting
+------------[ cut here ]------------
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 1 PID: 4212 at lib/refcount.c:25 refcount_warn_saturate+0x280/0x2c0 lib/refcount.c:25
+Modules linked in: sgpu(O) mychar(O)
+CPU: 1 UID: 0 PID: 4212 Comm: syz.1.1705 Tainted: G           O       6.12.0 #1
+Tainted: [O]=OOT_MODULE
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+RIP: 0010:refcount_warn_saturate+0x280/0x2c0 lib/refcount.c:25
+Code: ff 89 de e8 b2 af 2d ff 84 db 0f 85 aa fe ff ff e8 c5 ad 2d ff c6 05 65 cb 6b 04 01 90 48 c7 c7 c0 c2 e0 91 e8 21 42 f5 fe 90 <0f> 0b 90 90 e9 87 fe ff ff 48 89 df e8 3f 74 65 ff e9 b1 fd ff ff
+RSP: 0018:ff11000009e77c78 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: 0000000000000002 R08: 0000000000000001 R09: ffe21c00013cef3e
+R10: 0000000000000001 R11: 746e756f63666572 R12: ff11000002fde400
+R13: ff110000067d0000 R14: 0000000000000000 R15: 000000000000005a
+FS:  00007f71465356c0(0000) GS:ff1100006cd00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000005786000 CR4: 0000000000751ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ __refcount_add include/linux/refcount.h:190 [inline] [sgpu]
+ __refcount_inc include/linux/refcount.h:241 [inline] [sgpu]
+ refcount_inc include/linux/refcount.h:258 [inline] [sgpu]
+ kref_get include/linux/kref.h:45 [inline] [sgpu]
+ sgpu_job_ref_range+0x2ad/0x320 home/chen/work/sgpu/driver/sgpu.c:586 [sgpu]
+ sgpu_validate home/chen/work/sgpu/driver/sgpu.c:616 [inline] [sgpu]
+ sgpu_ioctl_submit home/chen/work/sgpu/driver/sgpu.c:760 [inline] [sgpu]
+ sgpu_ioctl+0xb04/0x2e80 home/chen/work/sgpu/driver/sgpu.c:854 [sgpu]
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl fs/ioctl.c:893 [inline]
+ __x64_sys_ioctl+0x192/0x220 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xbb/0x1d0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7147b3b0fd
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f7146534ff8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f7147dd6180 RCX: 00007f7147b3b0fd
+RDX: 0000200000000140 RSI: 00000000c0184706 RDI: 0000000000000004
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fff4dfcdaa0 R14: 00007f7146535ce4 R15: 00007fff4dfcdb97
+ </TASK>
+irq event stamp: 1473
+hardirqs last  enabled at (1485): [<ffffffff8e32582b>] __up_console_sem+0x7b/0x90 kernel/printk/printk.c:344
+hardirqs last disabled at (1496): [<ffffffff8e325810>] __up_console_sem+0x60/0x90 kernel/printk/printk.c:342
+softirqs last  enabled at (1174): [<ffffffff8e1aa55c>] __do_softirq kernel/softirq.c:588 [inline]
+softirqs last  enabled at (1174): [<ffffffff8e1aa55c>] invoke_softirq kernel/softirq.c:428 [inline]
+softirqs last  enabled at (1174): [<ffffffff8e1aa55c>] __irq_exit_rcu kernel/softirq.c:637 [inline]
+softirqs last  enabled at (1174): [<ffffffff8e1aa55c>] irq_exit_rcu+0x8c/0xc0 kernel/softirq.c:649
+softirqs last disabled at (1169): [<ffffffff8e1aa55c>] __do_softirq kernel/softirq.c:588 [inline]
+softirqs last disabled at (1169): [<ffffffff8e1aa55c>] invoke_softirq kernel/softirq.c:428 [inline]
+softirqs last disabled at (1169): [<ffffffff8e1aa55c>] __irq_exit_rcu kernel/softirq.c:637 [inline]
+softirqs last disabled at (1169): [<ffffffff8e1aa55c>] irq_exit_rcu+0x8c/0xc0 kernel/softirq.c:649
+---[ end trace 0000000000000000 ]---
+------------[ cut here ]------------
+refcount_t: saturated; leaking memory.
+WARNING: CPU: 1 PID: 4212 at lib/refcount.c:22 refcount_warn_saturate+0x2b0/0x2c0 lib/refcount.c:22
+Modules linked in: sgpu(O) mychar(O)
+CPU: 1 UID: 0 PID: 4212 Comm: syz.1.1705 Tainted: G        W  O       6.12.0 #1
+Tainted: [W]=WARN, [O]=OOT_MODULE
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+RIP: 0010:refcount_warn_saturate+0x2b0/0x2c0 lib/refcount.c:22
+Code: fe ff ff 48 89 df e8 3f 74 65 ff e9 b1 fd ff ff e8 95 ad 2d ff c6 05 36 cb 6b 04 01 90 48 c7 c7 20 c2 e0 91 e8 f1 41 f5 fe 90 <0f> 0b 90 90 e9 57 fe ff ff 0f 1f 80 00 00 00 00 90 90 90 90 90 90
+RSP: 0018:ff11000009e77c78 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: 0000000000000001 R08: 0000000000000001 R09: ffe21c00013cef3e
+R10: 0000000000000001 R11: 0000000063666572 R12: ff11000002fde400
+R13: ff110000067d0000 R14: 0000000000000000 R15: 0000000000000010
+FS:  00007f71465356c0(0000) GS:ff1100006cd00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000005786000 CR4: 0000000000751ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ __refcount_add include/linux/refcount.h:192 [inline] [sgpu]
+ __refcount_inc include/linux/refcount.h:241 [inline] [sgpu]
+ refcount_inc include/linux/refcount.h:258 [inline] [sgpu]
+ kref_get include/linux/kref.h:45 [inline] [sgpu]
+ sgpu_job_ref_range+0x296/0x320 home/chen/work/sgpu/driver/sgpu.c:586 [sgpu]
+ sgpu_validate home/chen/work/sgpu/driver/sgpu.c:624 [inline] [sgpu]
+ sgpu_ioctl_submit home/chen/work/sgpu/driver/sgpu.c:760 [inline] [sgpu]
+ sgpu_ioctl+0x1c79/0x2e80 home/chen/work/sgpu/driver/sgpu.c:854 [sgpu]
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl fs/ioctl.c:893 [inline]
+ __x64_sys_ioctl+0x192/0x220 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xbb/0x1d0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7147b3b0fd
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f7146534ff8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f7147dd6180 RCX: 00007f7147b3b0fd
+RDX: 0000200000000140 RSI: 00000000c0184706 RDI: 0000000000000004
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fff4dfcdaa0 R14: 00007f7146535ce4 R15: 00007fff4dfcdb97
+ </TASK>
+irq event stamp: 2297
+hardirqs last  enabled at (2307): [<ffffffff8e32582b>] __up_console_sem+0x7b/0x90 kernel/printk/printk.c:344
+hardirqs last disabled at (2316): [<ffffffff8e325810>] __up_console_sem+0x60/0x90 kernel/printk/printk.c:342
+softirqs last  enabled at (2216): [<ffffffff8e1aa55c>] __do_softirq kernel/softirq.c:588 [inline]
+softirqs last  enabled at (2216): [<ffffffff8e1aa55c>] invoke_softirq kernel/softirq.c:428 [inline]
+softirqs last  enabled at (2216): [<ffffffff8e1aa55c>] __irq_exit_rcu kernel/softirq.c:637 [inline]
+softirqs last  enabled at (2216): [<ffffffff8e1aa55c>] irq_exit_rcu+0x8c/0xc0 kernel/softirq.c:649
+softirqs last disabled at (2195): [<ffffffff8e1aa55c>] __do_softirq kernel/softirq.c:588 [inline]
+softirqs last disabled at (2195): [<ffffffff8e1aa55c>] invoke_softirq kernel/softirq.c:428 [inline]
+softirqs last disabled at (2195): [<ffffffff8e1aa55c>] __irq_exit_rcu kernel/softirq.c:637 [inline]
+softirqs last disabled at (2195): [<ffffffff8e1aa55c>] irq_exit_rcu+0x8c/0xc0 kernel/softirq.c:649
+---[ end trace 0000000000000000 ]---
+sgpu 0000:00:04.0: fault code 4 in context 1, resetting
+==================================================================
+BUG: KASAN: slab-use-after-free in sgpu_jobs_free+0x244/0x430 [sgpu]
+Write of size 4 at addr ff11000002fde400 by task irq/24-sgpu/192
+
+CPU: 0 UID: 0 PID: 192 Comm: irq/24-sgpu Tainted: G        W  O       6.12.0 #1
+Tainted: [W]=WARN, [O]=OOT_MODULE
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0xba/0x110 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x174/0x506 mm/kasan/report.c:488
+ kasan_report+0xda/0x110 mm/kasan/report.c:601
+ check_region_inline mm/kasan/generic.c:175 [inline]
+ kasan_check_range+0x10f/0x1f0 mm/kasan/generic.c:189
+ sgpu_jobs_free+0x244/0x430 [sgpu]
+ sgpu_irq_thread+0x226/0x290 [sgpu]
+ irq_thread_fn+0x8d/0x1a0 kernel/irq/manage.c:1219
+ irq_thread+0x37a/0x640 kernel/irq/manage.c:1324
+ kthread+0x2ad/0x360 kernel/kthread.c:389
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+Allocated by task 4208:
+ kasan_save_stack+0x30/0x50 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0x8f/0xa0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:878 [inline] [sgpu]
+ kzalloc_noprof include/linux/slab.h:1014 [inline] [sgpu]
+ sgpu_ioctl_bo_create home/chen/work/sgpu/driver/sgpu.c:409 [inline] [sgpu]
+ sgpu_ioctl+0x1509/0x2e80 home/chen/work/sgpu/driver/sgpu.c:846 [sgpu]
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl fs/ioctl.c:893 [inline]
+ __x64_sys_ioctl+0x192/0x220 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xbb/0x1d0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 823:
+ kasan_save_stack+0x30/0x50 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x70 mm/kasan/generic.c:579
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x37/0x50 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:230 [inline]
+ slab_free_hook mm/slub.c:2342 [inline]
+ slab_free mm/slub.c:4579 [inline]
+ kfree+0xfc/0x3c0 mm/slub.c:4727
+ sgpu_bo_release+0x2b1/0x400 [sgpu]
+ sgpu_jobs_free+0x1e0/0x430 [sgpu]
+ sgpu_watchdog+0x27b/0x3f0 home/chen/work/sgpu/driver/sgpu.c:390 [sgpu]
+ process_one_work+0x910/0x17d0 kernel/workqueue.c:3229
+ process_scheduled_works kernel/workqueue.c:3310 [inline]
+ worker_thread+0x5c8/0xe10 kernel/workqueue.c:3391
+ kthread+0x2ad/0x360 kernel/kthread.c:389
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+The buggy address belongs to the object at ff11000002fde400
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 0 bytes inside of
+ freed 64-byte region [ff11000002fde400, ff11000002fde440)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2fde
+anon flags: 0x100000000000000(node=0|zone=1)
+page_type: f5(slab)
+raw: 0100000000000000 ff110000010338c0 ffd40000002d96c0 dead000000000005
+raw: 0000000000000000 0000000000200020 00000001f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ff11000002fde300: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ff11000002fde380: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ff11000002fde400: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                   ^
+ ff11000002fde480: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ff11000002fde500: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+softirqs last  enabled at (1174): [<ffffffff8e1aa55c>] irq_exit_rcu+0x8c/0xc0
+softirqs last disabled at (1169): [<ffffffff8e1aa55c>] irq_exit_rcu+0x8c/0xc0
+---[ end trace 0000000000000000 ]---
+------------[ cut here ]------------
+refcount_t: saturated; leaking memory.
+WARNING: CPU: 1 PID: 4212 at lib/refcount.c:22 refcount_warn_saturate+0x2b0/0x2c0
+Modules linked in: sgpu(O) mychar(O)
+CPU: 1 UID: 0 PID: 4212 Comm: syz.1.1705 Tainted: G        W  O       6.12.0 #1
+Tainted: [W]=WARN, [O]=OOT_MODULE
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+RIP: 0010:refcount_warn_saturate+0x2b0/0x2c0
+Code: fe ff ff 48 89 df e8 3f 74 65 ff e9 b1 fd ff ff e8 95 ad 2d ff c6 05 36 cb 6b 04 01 90 48 c7 c7 20 c2 e0 91 e8 f1 41 f5 fe 90 <0f> 0b 90 90 e9 57 fe ff ff 0f 1f 80 00 00 00 00 90 90 90 90 90 90
+RSP: 0018:ff11000009e77c78 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: 0000000000000001 R08: 0000000000000001 R09: ffe21c00013cef3e
+R10: 0000000000000001 R11: 0000000063666572 R12: ff11000002fde400
+R13: ff110000067d0000 R14: 0000000000000000 R15: 0000000000000010
+FS:  00007f71465356c0(0000) GS:ff1100006cd00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000005786000 CR4: 0000000000751ef0
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ sgpu_job_ref_range+0x296/0x320 [sgpu]
+ sgpu_ioctl+0x1c79/0x2e80 [sgpu]
+ __x64_sys_ioctl+0x192/0x220
+ do_syscall_64+0xbb/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7147b3b0fd
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f7146534ff8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f7147dd6180 RCX: 00007f7147b3b0fd
+RDX: 0000200000000140 RSI: 00000000c0184706 RDI: 0000000000000004
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fff4dfcdaa0 R14: 00007f7146535ce4 R15: 00007fff4dfcdb97
+ </TASK>
+irq event stamp: 2297
+hardirqs last  enabled at (2307): [<ffffffff8e32582b>] __up_console_sem+0x7b/0x90
+hardirqs last disabled at (2316): [<ffffffff8e325810>] __up_console_sem+0x60/0x90
+softirqs last  enabled at (2216): [<ffffffff8e1aa55c>] irq_exit_rcu+0x8c/0xc0
+softirqs last disabled at (2195): [<ffffffff8e1aa55c>] irq_exit_rcu+0x8c/0xc0
+---[ end trace 0000000000000000 ]---
+sgpu 0000:00:04.0: fault code 4 in context 1, resetting
+==================================================================
+BUG: KASAN: slab-use-after-free in sgpu_jobs_free+0x244/0x430 [sgpu]
+Write of size 4 at addr ff11000002fde400 by task irq/24-sgpu/192
+
+CPU: 0 UID: 0 PID: 192 Comm: irq/24-sgpu Tainted: G        W  O       6.12.0 #1
+Tainted: [W]=WARN, [O]=OOT_MODULE
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0xba/0x110
+ print_report+0x174/0x506
+ kasan_report+0xda/0x110
+ kasan_check_range+0x10f/0x1f0
+ sgpu_jobs_free+0x244/0x430 [sgpu]
+ sgpu_irq_thread+0x226/0x290 [sgpu]
+ irq_thread_fn+0x8d/0x1a0
+ irq_thread+0x37a/0x640
+ kthread+0x2ad/0x360
+ ret_from_fork+0x48/0x80
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+
+Allocated by task 4208:
+ kasan_save_stack+0x30/0x50
+ kasan_save_track+0x14/0x30
+ __kasan_kmalloc+0x8f/0xa0
+ sgpu_ioctl+0x1509/0x2e80 [sgpu]
+ __x64_sys_ioctl+0x192/0x220
+ do_syscall_64+0xbb/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 823:
+ kasan_save_stack+0x30/0x50
+ kasan_save_track+0x14/0x30
+ kasan_save_free_info+0x3b/0x70
+ __kasan_slab_free+0x37/0x50
+ kfree+0xfc/0x3c0
+ sgpu_bo_release+0x2b1/0x400 [sgpu]
+ sgpu_jobs_free+0x1e0/0x430 [sgpu]
+ sgpu_watchdog+0x27b/0x3f0 [sgpu]
+ process_one_work+0x910/0x17d0
+ worker_thread+0x5c8/0xe10
+ kthread+0x2ad/0x360
+ ret_from_fork+0x48/0x80
+ ret_from_fork_asm+0x1a/0x30
+
+The buggy address belongs to the object at ff11000002fde400
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 0 bytes inside of
+ freed 64-byte region [ff11000002fde400, ff11000002fde440)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2fde
+anon flags: 0x100000000000000(node=0|zone=1)
+page_type: f5(slab)
+raw: 0100000000000000 ff110000010338c0 ffd40000002d96c0 dead000000000005
+raw: 0000000000000000 0000000000200020 00000001f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ff11000002fde300: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ff11000002fde380: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ff11000002fde400: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                   ^
+ ff11000002fde480: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ff11000002fde500: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+
+softirqs last  enabled at (2216): [<ffffffff8e1aa55c>] irq_exit_rcu+0x8c/0xc0
+softirqs last disabled at (2195): [<ffffffff8e1aa55c>] irq_exit_rcu+0x8c/0xc0
+---[ end trace 0000000000000000 ]---
+sgpu 0000:00:04.0: fault code 4 in context 1, resetting
+==================================================================
+BUG: KASAN: slab-use-after-free in sgpu_jobs_free+0x244/0x430 [sgpu]
+Write of size 4 at addr ff11000002fde400 by task irq/24-sgpu/192
+
+CPU: 0 UID: 0 PID: 192 Comm: irq/24-sgpu Tainted: G        W  O       6.12.0 #1
+Tainted: [W]=WARN, [O]=OOT_MODULE
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0xba/0x110
+ print_report+0x174/0x506
+ kasan_report+0xda/0x110
+ kasan_check_range+0x10f/0x1f0
+ sgpu_jobs_free+0x244/0x430 [sgpu]
+ sgpu_irq_thread+0x226/0x290 [sgpu]
+ irq_thread_fn+0x8d/0x1a0
+ irq_thread+0x37a/0x640
+ kthread+0x2ad/0x360
+ ret_from_fork+0x48/0x80
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+
+Allocated by task 4208:
+ kasan_save_stack+0x30/0x50
+ kasan_save_track+0x14/0x30
+ __kasan_kmalloc+0x8f/0xa0
+ sgpu_ioctl+0x1509/0x2e80 [sgpu]
+ __x64_sys_ioctl+0x192/0x220
+ do_syscall_64+0xbb/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 823:
+ kasan_save_stack+0x30/0x50
+ kasan_save_track+0x14/0x30
+ kasan_save_free_info+0x3b/0x70
+ __kasan_slab_free+0x37/0x50
+ kfree+0xfc/0x3c0
+ sgpu_bo_release+0x2b1/0x400 [sgpu]
+ sgpu_jobs_free+0x1e0/0x430 [sgpu]
+ sgpu_watchdog+0x27b/0x3f0 [sgpu]
+ process_one_work+0x910/0x17d0
+ worker_thread+0x5c8/0xe10
+ kthread+0x2ad/0x360
+ ret_from_fork+0x48/0x80
+ ret_from_fork_asm+0x1a/0x30
+
+The buggy address belongs to the object at ff11000002fde400
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 0 bytes inside of
+ freed 64-byte region [ff11000002fde400, ff11000002fde440)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2fde
+anon flags: 0x100000000000000(node=0|zone=1)
+page_type: f5(slab)
+raw: 0100000000000000 ff110000010338c0 ffd40000002d96c0 dead000000000005
+raw: 0000000000000000 0000000000200020 00000001f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ff11000002fde300: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ff11000002fde380: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ff11000002fde400: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                   ^
+ ff11000002fde480: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ff11000002fde500: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+<<<<<<<<<<<<<<< tail report >>>>>>>>>>>>>>>
+

@@ -1,0 +1,5 @@
+latency_us rounds=2000 p50=857 p90=1064 p99=1501 max=7387
+throughput batch=1 cmds_per_s=1235
+throughput batch=8 cmds_per_s=9451
+throughput batch=64 cmds_per_s=62362
+log: $HOME/work/sgpu/logs/bench-20261110-061259.log

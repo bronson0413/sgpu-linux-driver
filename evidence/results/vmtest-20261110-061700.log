@@ -1,0 +1,55 @@
+6.12.0
+4
+35
+crw-rw-rw- 1 root root 10, 125 Nov  9 22:18 /dev/mychar
+crw-rw-rw- 1 root root 10, 124 Nov  9 22:18 /dev/sgpu
+sgpu                   69632  0
+mychar                 12288  0
+boot_hits=0
+### mychar functional + stress
+stress: threads=4 seconds=60 ops=1939520 unexpected=0
+ALL TESTS PASSED: 142 checks, 0 failures
+exit=0
+### mychar repeat run
+ALL TESTS PASSED: 137 checks, 0 failures
+exit=0
+### mychar reload x5
+exit=0
+### sgpu reload with test commands
+exit=0
+### sgpu suite with test commands + stress
+status: reads=10536 context_cycles=4181
+stress: threads=4 seconds=60 jobs=90766 unexpected=0
+ALL TESTS PASSED: 292 checks, 0 failures
+exit=0
+### sgpu repeat run
+status: reads=10142 context_cycles=4440
+ALL TESTS PASSED: 291 checks, 0 failures
+exit=0
+### sgpu reload without test commands
+exit=0
+### sgpu suite without test commands
+status: reads=10183 context_cycles=4472
+ALL TESTS PASSED: 276 checks, 0 failures
+exit=0
+device: 0000:00:04.0
+### sgpu hot-unplug with open context
+unplug: job_status=0 checks=5 failures=0
+exit=0
+### sgpu rescan after unplug
+crw-rw-rw- 1 root root 10, 124 Nov  9 22:22 /dev/sgpu
+exit=0
+### sgpu suite after rescan
+status: reads=10521 context_cycles=4313
+ALL TESTS PASSED: 276 checks, 0 failures
+exit=0
+### sgpu unload
+exit=0
+### dmesg scan
+ lock-classes:                         1238 [max: 8192]
+ dependency chains:                   12320 [max: 65536]
+ debug_locks:                             1
+4096
+dmesg_hits=0 debug_locks=1 taint=4096
+RESULT: PASS
+log: $HOME/work/sgpu/logs/vmtest-20261110-061700.log

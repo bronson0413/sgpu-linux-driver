@@ -1,0 +1,12 @@
+2026/11/10 04:05:13 VM 0: crash: WARNING: refcount bug in sgpu_job_ref_range
+2026/11/10 04:05:13 VM 0: crash(tail0): WARNING: refcount bug in sgpu_job_ref_range
+2026/11/10 04:05:13 VM 0: crash(tail1): KASAN: slab-use-after-free Write in sgpu_jobs_free
+2026/11/10 04:05:13 start reproducing 'WARNING: refcount bug in sgpu_job_ref_range'
+2026/11/10 04:14:52 VM 3: crash: WARNING: refcount bug in sgpu_job_ref_range
+2026/11/10 04:14:52 VM 3: crash(tail0): WARNING: refcount bug in sgpu_job_ref_range
+2026/11/10 04:14:52 VM 3: crash(tail1): KASAN: slab-use-after-free Write in sgpu_jobs_free
+2026/11/10 04:27:12 VM 2: crash: WARNING: refcount bug in sgpu_job_ref_range
+2026/11/10 04:27:12 VM 2: crash(tail0): WARNING: refcount bug in sgpu_job_ref_range
+2026/11/10 04:27:12 VM 2: crash(tail1): KASAN: slab-use-after-free Write in sgpu_jobs_free
+2026/11/10 04:27:12 VM 2: crash(tail2): SYZFAIL: failed to recv rpc
+2026/11/10 04:43:34 repro finished 'WARNING: refcount bug in sgpu_job_ref_range', repro=false crepro=false desc='' hub=false from_dashboard=false

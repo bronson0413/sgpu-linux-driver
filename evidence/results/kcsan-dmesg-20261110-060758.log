@@ -1,0 +1,132 @@
+[   94.831646] ==================================================================
+[   94.832733] BUG: KCSAN: data-race in osq_lock / osq_unlock
+
+[   94.833843] write (marked) to 0xff1c9cdbfdd2e3c0 of 8 bytes by task 324 on cpu 3:
+[   94.834890]  osq_lock+0xbd/0x250
+[   94.835105]  __mutex_lock.constprop.0+0x19b/0xc20
+[   94.835266]  __mutex_lock_interruptible_slowpath+0xa/0x10
+[   94.835412]  mutex_lock_interruptible+0x94/0xa0
+[   94.835546]  mychar_ioctl+0x1c9/0x380 [mychar]
+[   94.836427]  __x64_sys_ioctl+0xbe/0x100
+[   94.836580]  x64_sys_call+0xf70/0x1bb0
+[   94.836713]  do_syscall_64+0x9e/0x1a0
+[   94.836816]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+[   94.837258] read to 0xff1c9cdbfdd2e3c0 of 8 bytes by task 326 on cpu 2:
+[   94.838153]  osq_unlock+0x9e/0x110
+[   94.838330]  __mutex_lock.constprop.0+0x250/0xc20
+[   94.838470]  __mutex_lock_interruptible_slowpath+0xa/0x10
+[   94.838666]  mutex_lock_interruptible+0x94/0xa0
+[   94.838829]  mychar_ioctl+0x1c9/0x380 [mychar]
+[   94.839014]  __x64_sys_ioctl+0xbe/0x100
+[   94.839159]  x64_sys_call+0xf70/0x1bb0
+[   94.839316]  do_syscall_64+0x9e/0x1a0
+[   94.839512]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+[   94.840157] value changed: 0x0000000000000000 -> 0xff1c9cdbfddae3c0
+
+[   94.841198] Reported by Kernel Concurrency Sanitizer on:
+[   94.842621] CPU: 2 UID: 0 PID: 326 Comm: test_mychar Tainted: G           O       6.12.0 #1
+[   94.843137] Tainted: [O]=OOT_MODULE
+[   94.843291] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+[   94.843694] ==================================================================
+[  101.385712] ==================================================================
+[  101.386474] BUG: KCSAN: data-race in osq_unlock+0x9e/0x110
+
+[  101.387641] race at unknown origin, with read to 0xff1c9cdbfdd2e3c0 of 8 bytes by task 323 on cpu 2:
+[  101.388498]  osq_unlock+0x9e/0x110
+[  101.388678]  __mutex_lock.constprop.0+0x250/0xc20
+[  101.388827]  __mutex_lock_interruptible_slowpath+0xa/0x10
+[  101.388988]  mutex_lock_interruptible+0x94/0xa0
+[  101.389124]  mychar_transfer+0x16b/0x2c0 [mychar]
+[  101.389319]  mychar_ioctl+0x15e/0x380 [mychar]
+[  101.389485]  __x64_sys_ioctl+0xbe/0x100
+[  101.389660]  x64_sys_call+0xf70/0x1bb0
+[  101.389765]  do_syscall_64+0x9e/0x1a0
+[  101.389861]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+[  101.390247] value changed: 0x0000000000000000 -> 0xff1c9cdbfddae3c0
+
+[  101.391109] Reported by Kernel Concurrency Sanitizer on:
+[  101.391717] CPU: 2 UID: 0 PID: 323 Comm: test_mychar Tainted: G           O       6.12.0 #1
+[  101.391849] Tainted: [O]=OOT_MODULE
+[  101.391906] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+[  101.392049] ==================================================================
+[  105.084394] ==================================================================
+[  105.085411] BUG: KCSAN: data-race in osq_unlock+0x9e/0x110
+
+[  105.086508] race at unknown origin, with read to 0xff1c9cdbfddae3c0 of 8 bytes by task 324 on cpu 3:
+[  105.087317]  osq_unlock+0x9e/0x110
+[  105.087484]  __mutex_lock.constprop.0+0x250/0xc20
+[  105.087678]  __mutex_lock_interruptible_slowpath+0xa/0x10
+[  105.087902]  mutex_lock_interruptible+0x94/0xa0
+[  105.088011]  mychar_ioctl+0xc5/0x380 [mychar]
+[  105.088130]  __x64_sys_ioctl+0xbe/0x100
+[  105.088234]  x64_sys_call+0xf70/0x1bb0
+[  105.088327]  do_syscall_64+0x9e/0x1a0
+[  105.088439]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+[  105.088898] value changed: 0x0000000000000000 -> 0xff1c9cdbfdcae3c0
+
+[  105.089860] Reported by Kernel Concurrency Sanitizer on:
+[  105.090385] CPU: 3 UID: 0 PID: 324 Comm: test_mychar Tainted: G           O       6.12.0 #1
+[  105.090575] Tainted: [O]=OOT_MODULE
+[  105.090656] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+[  105.090785] ==================================================================
+[  137.926816] ==================================================================
+[  137.927535] BUG: KCSAN: data-race in osq_lock / osq_unlock
+
+[  137.928567] write (marked) to 0xff1c9cdbfdcae3c0 of 8 bytes by task 326 on cpu 0:
+[  137.929388]  osq_lock+0xbd/0x250
+[  137.929536]  __mutex_lock.constprop.0+0x19b/0xc20
+[  137.929630]  __mutex_lock_interruptible_slowpath+0xa/0x10
+[  137.929724]  mutex_lock_interruptible+0x94/0xa0
+[  137.929819]  mychar_transfer+0x16b/0x2c0 [mychar]
+[  137.929980]  mychar_ioctl+0x15e/0x380 [mychar]
+[  137.930134]  __x64_sys_ioctl+0xbe/0x100
+[  137.930319]  x64_sys_call+0xf70/0x1bb0
+[  137.930492]  do_syscall_64+0x9e/0x1a0
+[  137.930592]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+[  137.930978] read to 0xff1c9cdbfdcae3c0 of 8 bytes by task 325 on cpu 1:
+[  137.931547]  osq_unlock+0x9e/0x110
+[  137.931676]  __mutex_lock.constprop.0+0x250/0xc20
+[  137.931844]  __mutex_lock_interruptible_slowpath+0xa/0x10
+[  137.932002]  mutex_lock_interruptible+0x94/0xa0
+[  137.932153]  mychar_ioctl+0x2bc/0x380 [mychar]
+[  137.932450]  __x64_sys_ioctl+0xbe/0x100
+[  137.932590]  x64_sys_call+0xf70/0x1bb0
+[  137.932728]  do_syscall_64+0x9e/0x1a0
+[  137.932869]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+[  137.933316] value changed: 0x0000000000000000 -> 0xff1c9cdbfdc2e3c0
+
+[  137.934128] Reported by Kernel Concurrency Sanitizer on:
+[  137.934466] CPU: 1 UID: 0 PID: 325 Comm: test_mychar Tainted: G           O       6.12.0 #1
+[  137.934589] Tainted: [O]=OOT_MODULE
+[  137.934663] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+[  137.934789] ==================================================================
+[  163.314676] sgpu 0000:00:04.0: fault code 3 in context 0, resetting
+[  164.354451] sgpu 0000:00:04.0: hang in context 0, resetting
+[  165.361368] sgpu 0000:00:04.0: hang in context 0, resetting
+[  274.201624] ==================================================================
+[  274.202220] BUG: KCSAN: data-race in osq_unlock+0x9e/0x110
+
+[  274.203037] race at unknown origin, with read to 0xff1c9cdbfdd2e3c0 of 8 bytes by task 348 on cpu 2:
+[  274.203809]  osq_unlock+0x9e/0x110
+[  274.203947]  __mutex_lock.constprop.0+0x250/0xc20
+[  274.204041]  __mutex_lock_slowpath+0xa/0x10
+[  274.204127]  mutex_lock+0x92/0xa0
+[  274.204201]  sgpu_ioctl+0x284/0x18e0 [sgpu]
+[  274.204339]  __x64_sys_ioctl+0xbe/0x100
+[  274.204477]  x64_sys_call+0xf70/0x1bb0
+[  274.204567]  do_syscall_64+0x9e/0x1a0
+[  274.204659]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+[  274.204915] value changed: 0x0000000000000000 -> 0xff1c9cdbfdcae3c0
+
+[  274.205604] Reported by Kernel Concurrency Sanitizer on:
+[  274.206467] CPU: 2 UID: 0 PID: 348 Comm: test_sgpu Tainted: G           O       6.12.0 #1
+[  274.206660] Tainted: [O]=OOT_MODULE
+[  274.206724] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+[  274.206797] ==================================================================

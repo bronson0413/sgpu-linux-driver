@@ -1,0 +1,26 @@
+baseline test_ops=1 exit=0
+baseline test_ops=0 exit=0
+nop_fields: KILLED exit=1 FAIL test_validator:216: (submit_one(fd, 0u, 1, 0, 0)) == -1 && errno == (22) (errno=22)
+fill_zero_len: SURVIVED
+fill_max_len: SURVIVED
+fill_pattern: KILLED exit=1 FAIL test_validator:218: (submit_one(fd, 1u, 0x100, va, 1)) == -1 && errno == (22) (errno=22)
+copy_zero_len: SURVIVED
+range_end_same_bo: KILLED exit=2 FAIL test_validator:221: (submit_one(fd, 1u, 0, va + 4095, 2)) == -1 && errno == (22) (errno=22)
+guard_page: KILLED exit=1 FAIL test_bo_limits:126: all.size() == 3 (errno=28)
+gate_test_hang: KILLED exit=1 FAIL test_test_ops_disabled:369: (submit_one(d.fd(), 0x100u, 0, 0, 0)) == -1 && errno == (22) (errno=16)
+gate_test_fault: KILLED exit=1 FAIL test_test_ops_disabled:370: (submit_one(d.fd(), 0x101u, 0, 0, 0)) == -1 && errno == (22) (errno=22)
+submit_pad: KILLED exit=1 FAIL test_validator:231: (raw_submit(fd, &cmd, 1, 1)) == -1 && errno == (22) (errno=22)
+submit_zero_count: KILLED exit=1 FAIL test_validator:229: (raw_submit(fd, &cmd, 0)) == -1 && errno == (22) (errno=22)
+wait_foreign_fence: KILLED exit=1 FAIL test_fences:202: (raw_wait(d.fd(), f.value() + 1000, 10)) == -1 && errno == (22) (errno=62)
+wait_zero_fence: KILLED exit=1 FAIL test_fences:201: (raw_wait(d.fd(), 0, 10)) == -1 && errno == (22) (errno=14)
+wait_max_timeout: KILLED exit=1 FAIL test_fences:203: (raw_wait(d.fd(), f.value(), 3600000)) == -1 && errno == (22) (errno=22)
+create_pad: KILLED exit=1 FAIL test_bo_limits:100: (raw_create(d.fd(), 4096, 1)) == -1 && errno == (22) (errno=22)
+destroy_pad: KILLED exit=1 FAIL test_bo_limits:111: (ioctl(d.fd(), (((1U) << (((0+8)+8)+14)) | ((('G')) << (0+8)) | (((3)) << 0) | ((((si
+unpublish_va: KILLED exit=1 FAIL test_destroy_unpublishes_va:316: (submit_one(d.fd(), 1u, 0x66, va, 16)) == -1 && errno == (22) (errno=5)
+xfer_pad: KILLED exit=1 FAIL test_bo_xfer:154: (raw_xfer(fd, (((1U) << (((0+8)+8)+14)) | ((('G')) << (0+8)) | (((5)) << 0) | ((((sizeo
+xfer_zero_len: KILLED exit=1 FAIL test_bo_xfer:153: (raw_xfer(fd, (((1U) << (((0+8)+8)+14)) | ((('G')) << (0+8)) | (((5)) << 0) | ((((sizeo
+banned_submit: KILLED exit=1 FAIL test_fault_recovery:344: (submit_one(bad.fd(), 0u, 0, 0, 0)) == -1 && errno == (5) (errno=16)
+ban_on_reset: KILLED exit=1 FAIL test_fault_recovery:340: bad.info().banned == 1 (errno=16)
+cancel_status: KILLED exit=1 FAIL test_hang_recovery:356: queued.wait() == -ECANCELED (errno=5)
+mutants_total=22 killed=19 survived=3
+log: $HOME/work/sgpu/logs/mutation-20261110-045209.log

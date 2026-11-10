@@ -1,0 +1,46 @@
+[    1.710106] ==================================================================
+[    1.710106] BUG: KASAN: wild-memory-access in do_raw_spin_lock+0x11a/0x260
+[    1.710106] Write of size 4 at addr ff110000010698a8 by task swapper/0/0
+[    1.710106] 
+[    1.710106] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.12.0 #1
+[    1.710106] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+[    1.710106] Call Trace:
+[    1.710106]  <IRQ>
+[    1.710106]  dump_stack_lvl+0xba/0x110
+[    1.710106]  ? do_raw_spin_lock+0x11a/0x260
+[    1.710106]  kasan_report+0xda/0x110
+[    1.710106]  ? do_raw_spin_lock+0x11a/0x260
+[    1.710106]  kasan_check_range+0x10f/0x1f0
+[    1.710106]  do_raw_spin_lock+0x11a/0x260
+[    1.710106]  ? __pfx_do_raw_spin_lock+0x10/0x10
+[    1.710106]  ? lock_acquire+0x31/0xc0
+[    1.710106]  ? handle_edge_irq+0x32/0xc90
+[    1.710106]  handle_edge_irq+0x32/0xc90
+[    1.710106]  __common_interrupt+0xb4/0x1f0
+[    1.710106]  common_interrupt+0x89/0xb0
+[    1.710106]  </IRQ>
+[    1.710106]  <TASK>
+[    1.710106]  asm_common_interrupt+0x26/0x40
+[    1.710106] RIP: 0010:identify_cpu+0x257/0x1ed0
+[    1.710106] Code: 1b 00 00 49 8d 40 30 ba 60 00 00 00 31 f6 4c 89 44 24 08 41 c7 80 10 01 00 00 40 00 00 00 48 89 c7 48 89 04 24 e8 29 62 7b 00 <4c> 8b 44 24 08 ba 14 00 00 00 31 f6 49 8d 78 0c e8 14 62 7b 00 4c
+[    1.710106] RSP: 0000:ffffffffac007e70 EFLAGS: 00010246
+[    1.710106] RAX: ffffffffacf1e250 RBX: 00000000003425ed RCX: 0000000000000000
+[    1.710106] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffacf1e2b0
+[    1.710106] RBP: ffffffffacf1e2c0 R08: 0000000000000001 R09: 0000000000000000
+[    1.710106] R10: ffffffffacf1e250 R11: 0000000000000001 R12: ffffffffacf1e241
+[    1.710106] R13: ffffffffacf1e358 R14: ffffffffacf1e240 R15: ffffffffacf1e330
+[    1.710106]  ? jump_label_update+0x1d1/0x3f0
+[    1.710106]  arch_cpu_finalize_init+0x25/0x300
+[    1.710106]  ? __pfx_x86_late_time_init+0x10/0x10
+[    1.710106]  start_kernel+0x46c/0x510
+[    1.710106]  x86_64_start_reservations+0x24/0x30
+[    1.710106]  x86_64_start_kernel+0xe9/0xf0
+[    1.710106]  common_startup_64+0x12c/0x138
+[    1.710106]  </TASK>
+[    1.710106] ==================================================================
+4
+35
+ debug_locks:                             0
+4128
+dmesg_hits=0
+RESULT: PASS

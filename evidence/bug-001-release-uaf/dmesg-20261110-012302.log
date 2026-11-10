@@ -1,0 +1,209 @@
+[  223.515703] sgpu 0000:00:04.0: sgpu ready, 16 contexts
+[  227.500392] sgpu 0000:00:04.0: fault code 3 in context 1, resetting
+[  228.556865] sgpu 0000:00:04.0: hang in context 0, resetting
+[  302.254940] sgpu 0000:00:04.0: fault code 3 in context 0, resetting
+[  303.385816] sgpu 0000:00:04.0: hang in context 0, resetting
+[  316.608765] sgpu 0000:00:04.0: sgpu ready, 16 contexts
+
+[  335.978176] =========================
+[  335.978462] WARNING: held lock freed!
+[  335.979656] 6.12.0 #1 Tainted: G           O      
+[  335.980136] -------------------------
+[  335.980411] test_sgpu/468 is freeing memory ff11000005189800-ff11000005189bff, with a lock still held there!
+[  335.981274] ff110000051899d8 (&dev->remove_sem){++++}-{3:3}, at: sgpu_release+0xd6/0x270 [sgpu]
+[  335.985432] 1 lock held by test_sgpu/468:
+[  335.985779]  #0: ff110000051899d8 (&dev->remove_sem){++++}-{3:3}, at: sgpu_release+0xd6/0x270 [sgpu]
+[  335.987327] 
+               stack backtrace:
+[  335.988397] CPU: 2 UID: 0 PID: 468 Comm: test_sgpu Tainted: G           O       6.12.0 #1
+[  335.989427] Tainted: [O]=OOT_MODULE
+[  335.989879] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+[  335.991022] Call Trace:
+[  335.991524]  <TASK>
+[  335.992187]  dump_stack_lvl+0xba/0x110
+[  335.993050]  debug_check_no_locks_freed+0x221/0x280
+[  335.993664]  kfree+0xbe/0x3c0
+[  335.994174]  ? sgpu_ctx_release+0x294/0x350 [sgpu]
+[  335.994654]  sgpu_ctx_release+0x294/0x350 [sgpu]
+[  335.995145]  sgpu_release+0x1df/0x270 [sgpu]
+[  335.995569]  ? __pfx_sgpu_release+0x10/0x10 [sgpu]
+[  335.996001]  ? __pfx___might_resched+0x10/0x10
+[  335.996655]  ? __call_rcu_common.constprop.0+0x3e4/0xb20
+[  335.997178]  ? percpu_counter_add_batch+0xb4/0x1f0
+[  335.997814]  ? __pfx_sgpu_release+0x10/0x10 [sgpu]
+[  335.998289]  __fput+0x3f6/0xb30
+[  335.998678]  task_work_run+0x151/0x250
+[  335.999147]  ? __pfx_task_work_run+0x10/0x10
+[  335.999521]  ? do_raw_spin_unlock+0x53/0x210
+[  336.000003]  do_exit+0xa62/0x2a20
+[  336.000396]  ? lockdep_hardirqs_on_prepare+0x269/0x400
+[  336.000822]  ? __pfx_do_exit+0x10/0x10
+[  336.001175]  do_group_exit+0xd5/0x2a0
+[  336.001497]  get_signal+0x202c/0x2280
+[  336.001868]  ? __pfx_get_signal+0x10/0x10
+[  336.002256]  arch_do_signal_or_restart+0x93/0x730
+[  336.002640]  ? __pfx_arch_do_signal_or_restart+0x10/0x10
+[  336.003108]  ? ksys_write+0x1ad/0x260
+[  336.003478]  ? __pfx_ksys_write+0x10/0x10
+[  336.003841]  syscall_exit_to_user_mode+0x11b/0x1c0
+[  336.004557]  do_syscall_64+0xc8/0x1d0
+[  336.005222]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  336.006044] RIP: 0033:0x500ab2
+[  336.006740] Code: Unable to access opcode bytes at 0x500a88.
+[  336.007104] RSP: 002b:00007ffc54faf618 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  336.007628] RAX: 0000000000000001 RBX: 0000000000000001 RCX: 0000000000500ab2
+[  336.008051] RDX: 0000000000000001 RSI: 00000000034d5a30 RDI: 0000000000000004
+[  336.008399] RBP: 00007ffc54faf640 R08: 0000000000000000 R09: 0000000000000000
+[  336.008802] R10: 0000000000000000 R11: 0000000000000246 R12: 00000000034d5a30
+[  336.009184] R13: 0000000000000001 R14: 0000000000000004 R15: 00000000034d51c0
+[  336.009576]  </TASK>
+[  336.011347] ==================================================================
+[  336.012468] BUG: KASAN: slab-use-after-free in __up_read+0x576/0x770
+[  336.013398] Read of size 8 at addr ff110000051899d0 by task test_sgpu/468
+
+[  336.015220] CPU: 2 UID: 0 PID: 468 Comm: test_sgpu Tainted: G           O       6.12.0 #1
+[  336.016010] Tainted: [O]=OOT_MODULE
+[  336.016459] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+[  336.017180] Call Trace:
+[  336.017530]  <TASK>
+[  336.017975]  dump_stack_lvl+0xba/0x110
+[  336.018593]  ? __up_read+0x576/0x770
+[  336.019355]  print_report+0x174/0x506
+[  336.020068]  ? __virt_addr_valid+0x81/0x670
+[  336.020769]  ? __up_read+0x576/0x770
+[  336.021339]  kasan_report+0xda/0x110
+[  336.021882]  ? __up_read+0x576/0x770
+[  336.022482]  __up_read+0x576/0x770
+[  336.023076]  ? kfree+0xfc/0x3c0
+[  336.023575]  ? __pfx___up_read+0x10/0x10
+[  336.024194]  ? sgpu_ctx_release+0x294/0x350 [sgpu]
+[  336.024908]  sgpu_release+0x1ee/0x270 [sgpu]
+[  336.025539]  ? __pfx_sgpu_release+0x10/0x10 [sgpu]
+[  336.026280]  ? __pfx___might_resched+0x10/0x10
+[  336.026879]  ? __call_rcu_common.constprop.0+0x3e4/0xb20
+[  336.027596]  ? percpu_counter_add_batch+0xb4/0x1f0
+[  336.028229]  ? __pfx_sgpu_release+0x10/0x10 [sgpu]
+[  336.028697]  __fput+0x3f6/0xb30
+[  336.029248]  task_work_run+0x151/0x250
+[  336.029829]  ? __pfx_task_work_run+0x10/0x10
+[  336.030535]  ? do_raw_spin_unlock+0x53/0x210
+[  336.031174]  do_exit+0xa62/0x2a20
+[  336.031742]  ? lockdep_hardirqs_on_prepare+0x269/0x400
+[  336.032331]  ? __pfx_do_exit+0x10/0x10
+[  336.032772]  do_group_exit+0xd5/0x2a0
+[  336.033218]  get_signal+0x202c/0x2280
+[  336.033610]  ? __pfx_get_signal+0x10/0x10
+[  336.034142]  arch_do_signal_or_restart+0x93/0x730
+[  336.034523]  ? __pfx_arch_do_signal_or_restart+0x10/0x10
+[  336.035068]  ? ksys_write+0x1ad/0x260
+[  336.035517]  ? __pfx_ksys_write+0x10/0x10
+[  336.036118]  syscall_exit_to_user_mode+0x11b/0x1c0
+[  336.036667]  do_syscall_64+0xc8/0x1d0
+[  336.037048]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  336.037414] RIP: 0033:0x500ab2
+[  336.037738] Code: Unable to access opcode bytes at 0x500a88.
+[  336.038151] RSP: 002b:00007ffc54faf618 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  336.038569] RAX: 0000000000000001 RBX: 0000000000000001 RCX: 0000000000500ab2
+[  336.039009] RDX: 0000000000000001 RSI: 00000000034d5a30 RDI: 0000000000000004
+[  336.039346] RBP: 00007ffc54faf640 R08: 0000000000000000 R09: 0000000000000000
+[  336.039662] R10: 0000000000000000 R11: 0000000000000246 R12: 00000000034d5a30
+[  336.040063] R13: 0000000000000001 R14: 0000000000000004 R15: 00000000034d51c0
+[  336.040414]  </TASK>
+
+[  336.041105] Allocated by task 422:
+[  336.041646]  kasan_save_stack+0x30/0x50
+[  336.042316]  kasan_save_track+0x14/0x30
+[  336.043117]  __kasan_kmalloc+0x8f/0xa0
+[  336.043786]  sgpu_probe+0x4f/0x9c0 [sgpu]
+[  336.044282]  local_pci_probe+0xdb/0x190
+[  336.044754]  pci_device_probe+0x491/0x570
+[  336.045411]  really_probe+0x255/0x780
+[  336.046203]  __driver_probe_device+0x1ee/0x330
+[  336.046589]  driver_probe_device+0x4c/0x1f0
+[  336.047386]  __driver_attach+0x1e3/0x4f0
+[  336.048032]  bus_for_each_dev+0x13f/0x1d0
+[  336.048465]  bus_add_driver+0x24e/0x4f0
+[  336.048894]  driver_register+0x1e2/0x360
+[  336.049335]  do_one_initcall+0x10e/0x600
+[  336.049791]  do_init_module+0x22e/0x6a0
+[  336.050319]  load_module+0x4775/0x5f60
+[  336.050742]  init_module_from_file+0xcc/0x130
+[  336.051211]  idempotent_init_module+0x232/0x770
+[  336.051566]  __x64_sys_finit_module+0xb3/0x110
+[  336.052228]  do_syscall_64+0xbb/0x1d0
+[  336.052823]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+[  336.053867] Freed by task 468:
+[  336.054292]  kasan_save_stack+0x30/0x50
+[  336.054737]  kasan_save_track+0x14/0x30
+[  336.055345]  kasan_save_free_info+0x3b/0x70
+[  336.055899]  __kasan_slab_free+0x37/0x50
+[  336.056438]  kfree+0xfc/0x3c0
+[  336.056850]  sgpu_ctx_release+0x294/0x350 [sgpu]
+[  336.057353]  sgpu_release+0x1df/0x270 [sgpu]
+[  336.057845]  __fput+0x3f6/0xb30
+[  336.058271]  task_work_run+0x151/0x250
+[  336.058642]  do_exit+0xa62/0x2a20
+[  336.059042]  do_group_exit+0xd5/0x2a0
+[  336.059535]  get_signal+0x202c/0x2280
+[  336.060016]  arch_do_signal_or_restart+0x93/0x730
+[  336.060372]  syscall_exit_to_user_mode+0x11b/0x1c0
+[  336.061012]  do_syscall_64+0xc8/0x1d0
+[  336.061453]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+[  336.062197] Last potentially related work creation:
+[  336.062538]  kasan_save_stack+0x30/0x50
+[  336.063163]  __kasan_record_aux_stack+0x8e/0xa0
+[  336.063684]  insert_work+0x2d/0x1f0
+[  336.064193]  __queue_work+0xa27/0x1210
+[  336.064618]  call_timer_fn+0x193/0x630
+[  336.065159]  __run_timers+0x5c4/0x980
+[  336.065564]  run_timer_softirq+0x16d/0x2a0
+[  336.066099]  handle_softirqs+0x1c5/0x850
+[  336.066649]  irq_exit_rcu+0x8c/0xc0
+[  336.067254]  sysvec_apic_timer_interrupt+0x7a/0xa0
+[  336.067886]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+
+[  336.068873] Second to last potentially related work creation:
+[  336.069161]  kasan_save_stack+0x30/0x50
+[  336.069561]  __kasan_record_aux_stack+0x8e/0xa0
+[  336.070137]  insert_work+0x2d/0x1f0
+[  336.070537]  __queue_work+0xa27/0x1210
+[  336.071102]  call_timer_fn+0x193/0x630
+[  336.071475]  __run_timers+0x5c4/0x980
+[  336.071860]  run_timer_softirq+0x16d/0x2a0
+[  336.072413]  handle_softirqs+0x1c5/0x850
+[  336.073205]  irq_exit_rcu+0x8c/0xc0
+[  336.073841]  sysvec_apic_timer_interrupt+0x7a/0xa0
+[  336.074505]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+
+[  336.075432] The buggy address belongs to the object at ff11000005189800
+                which belongs to the cache kmalloc-1k of size 1024
+[  336.076427] The buggy address is located 464 bytes inside of
+                freed 1024-byte region [ff11000005189800, ff11000005189c00)
+
+[  336.077745] The buggy address belongs to the physical page:
+[  336.078823] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x5188
+[  336.080452] head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+[  336.081401] flags: 0x100000000000040(head|node=0|zone=1)
+[  336.083014] page_type: f5(slab)
+[  336.084163] raw: 0100000000000040 ff1100000103cdc0 ffd400000016ca00 dead000000000002
+[  336.084944] raw: 0000000000000000 0000000000100010 00000001f5000000 0000000000000000
+[  336.085544] head: 0100000000000040 ff1100000103cdc0 ffd400000016ca00 dead000000000002
+[  336.085952] head: 0000000000000000 0000000000100010 00000001f5000000 0000000000000000
+[  336.086340] head: 0100000000000003 ffd4000000146201 ffffffffffffffff 0000000000000000
+[  336.086722] head: 0000000000000008 0000000000000000 00000000ffffffff 0000000000000000
+[  336.087552] page dumped because: kasan: bad access detected
+
+[  336.088520] Memory state around the buggy address:
+[  336.089311]  ff11000005189880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  336.089769]  ff11000005189900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  336.090324] >ff11000005189980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  336.090653]                                                  ^
+[  336.091150]  ff11000005189a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  336.091522]  ff11000005189a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  336.092010] ==================================================================
+[  338.064156] pci 0000:00:04.0: [1234:5347] type 00 class 0x038000 conventional PCI endpoint
+[  338.066419] pci 0000:00:04.0: BAR 0 [mem 0xfebf1000-0xfebf1fff]
+[  338.230569] pci 0000:00:04.0: BAR 0 [mem 0x80000000-0x80000fff]: assigned
+[  338.261207] sgpu 0000:00:04.0: sgpu ready, 16 contexts

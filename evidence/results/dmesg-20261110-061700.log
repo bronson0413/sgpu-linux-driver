@@ -1,0 +1,12 @@
+[  204.059934] sgpu 0000:00:04.0: sgpu ready, 16 contexts
+[  207.818360] sgpu 0000:00:04.0: fault code 3 in context 1, resetting
+[  208.918287] sgpu 0000:00:04.0: hang in context 0, resetting
+[  209.933836] sgpu 0000:00:04.0: hang in context 0, resetting
+[  283.599199] sgpu 0000:00:04.0: fault code 3 in context 0, resetting
+[  284.699016] sgpu 0000:00:04.0: hang in context 0, resetting
+[  286.210904] sgpu 0000:00:04.0: hang in context 0, resetting
+[  299.307435] sgpu 0000:00:04.0: sgpu ready, 16 contexts
+[  320.995380] pci 0000:00:04.0: [1234:5347] type 00 class 0x038000 conventional PCI endpoint
+[  320.997651] pci 0000:00:04.0: BAR 0 [mem 0xfebf1000-0xfebf1fff]
+[  321.222399] pci 0000:00:04.0: BAR 0 [mem 0x80000000-0x80000fff]: assigned
+[  321.271684] sgpu 0000:00:04.0: sgpu ready, 16 contexts

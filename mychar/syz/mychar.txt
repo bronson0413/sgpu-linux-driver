@@ -1,0 +1,40 @@
+# Description of /dev/mychar (out-of-tree practice driver)
+include <linux/fcntl.h>
+
+resource fd_mychar[fd]
+
+openat$mychar(fd const[AT_FDCWD], file ptr[in, string["/dev/mychar"]], flags flags[open_flags], mode const[0]) fd_mychar
+
+ioctl$MYCHAR_RESIZE(fd fd_mychar, cmd const[MYCHAR_IOC_RESIZE], arg ptr[in, mychar_size])
+ioctl$MYCHAR_WRITE_AT(fd fd_mychar, cmd const[MYCHAR_IOC_WRITE_AT], arg ptr[in, mychar_xfer])
+ioctl$MYCHAR_READ_AT(fd fd_mychar, cmd const[MYCHAR_IOC_READ_AT], arg ptr[in, mychar_xfer])
+ioctl$MYCHAR_RESET(fd fd_mychar, cmd const[MYCHAR_IOC_RESET])
+ioctl$MYCHAR_STAT(fd fd_mychar, cmd const[MYCHAR_IOC_STAT], arg ptr[out, mychar_stat])
+
+# Unconstrained variants keep the bounds and integer-overflow paths reachable.
+ioctl$MYCHAR_WRITE_AT_RAW(fd fd_mychar, cmd const[MYCHAR_IOC_WRITE_AT], arg ptr[in, mychar_xfer_raw])
+ioctl$MYCHAR_READ_AT_RAW(fd fd_mychar, cmd const[MYCHAR_IOC_READ_AT], arg ptr[in, mychar_xfer_raw])
+
+# Valid sizes plus one value past the 1 MiB limit.
+type mychar_size int64[0:0x100001]
+
+# len is tied to the buffer, so most calls pass the argument checks.
+mychar_xfer {
+	offset		int64[0:0x2000]
+	len		len[user_ptr, int64]
+	user_ptr	ptr64[inout, array[int8, 0:0x2000]]
+}
+
+mychar_xfer_raw {
+	offset		int64
+	len		int64
+	user_ptr	ptr64[inout, array[int8]]
+}
+
+mychar_stat {
+	size	int64
+	written	int64
+	read	int64
+	resizes	int32
+	pad	int32
+}

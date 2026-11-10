@@ -1,0 +1,28 @@
+# Kernel build output
+*.o
+*.ko
+*.mod
+*.mod.c
+*.cmd
+.*.cmd
+.module-common.o
+Module.symvers
+modules.order
+build-kcsan/
+build-mutants/
+
+# Test binaries
+tests/test_sgpu
+tests/bench_sgpu
+mychar/test_mychar
+
+# Full logs are large. The ones behind published numbers are in evidence/results.
+logs/
+mychar/logs/
+
+# Never commit VM keys or images
+*.img
+id_rsa*
+*.pem
+
+__pycache__/
